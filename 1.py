@@ -46,7 +46,7 @@ def slownie(liczba):
     ]
     slowo = ""
     for i, l in enumerate(
-        [liczba[i:i + 3] for i in xrange(0, len(liczba), 3)]
+        [liczba[i:i + 3] for i in range(0, len(liczba), 3)]
     ):
         temp = ""
         if l[-1] == '-':
@@ -70,17 +70,17 @@ def slownie(liczba):
         slowo = temp + (i >= 0 and duze(l, i) or "") + " " + slowo
     return slowo
 
-print slownie(116456789)
-print slownie(5371823)
-print slownie(83472)
-print slownie(2438382)
-print slownie(11111)
-print slownie(123456789)
-print slownie(987654321)
-print slownie(110)
-print slownie(40)
-print slownie(0)
-print slownie(123456)
-print slownie(-123)
-print slownie(-11)
-print slownie(-12346)
+print(slownie(116456789))
+print(slownie(5371823))
+print(slownie(83472))
+print(slownie(2438382))
+print(slownie(11111))
+print(slownie(123456789))
+print(slownie(987654321))
+print(slownie(110))
+print(slownie(40))
+print(slownie(0))
+print(slownie(123456))
+print(slownie(-123))
+print(slownie(-11))
+print(slownie(-12346))
