@@ -9,6 +9,7 @@ Converts given number to it's literal representation (in Polish!).
 doskonale_skladana
 ------------------
 Prints perfect numbers from 6 (the smallest one) to the given n. List comprehension based one.
+
 doskonale_funkcyjna
 -------------------
 Same as above, but functional version.
