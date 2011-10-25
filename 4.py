@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 class Doskonale(object):
-    def __init__(self, n):
+    def __init__(self, n = None):
         self.val = 5
         self.max = n
     def __iter__(self):
@@ -9,7 +9,7 @@ class Doskonale(object):
     def __next__(self):
         while 1:
             self.val += 1
-            if self.val > self.max:
+            if self.max and self.val > self.max:
                 raise StopIteration
             if sum(
                 [d for d in range(1, self.val) if self.val % d == 0]
