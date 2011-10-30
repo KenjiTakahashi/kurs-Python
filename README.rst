@@ -28,3 +28,13 @@ It is also able to join words split at the end of the line.
 stats
 -----
 Generates statistics of how many words of given length are in the text.
+
+5.py
+====
+ActivityChecker
+---------------
+Given an directory with website, it checks all the links whether they are active or not.
+
+ReferenceChecker
+----------------
+Given an directory with website, it searches for all references to every page within the website.

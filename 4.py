@@ -63,7 +63,6 @@ def stats(string):
     stats = Counter()
     stream = StringIO(string)
     for word in Worder(stream):
-        print(word)
         stats[len(word)] += 1
     stream.close()
     return stats
