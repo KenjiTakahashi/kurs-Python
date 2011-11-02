@@ -34,8 +34,9 @@ class ActivityChecker(html.parser.HTMLParser):
     def check(self):
         for root, _, filenames in os.walk(self.directory):
             for filename in filenames:
-                with open(os.path.join(root, filename)) as data:
-                    self.feed(data.read())
+                if os.path.splitext(filename)[1] == '.html':
+                    with open(os.path.join(root, filename)) as data:
+                        self.feed(data.read())
         return self.results
     def pretty_print(self):
         const = 0
