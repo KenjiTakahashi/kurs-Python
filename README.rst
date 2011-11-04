@@ -38,3 +38,7 @@ Given an directory with website, it checks all the links whether they are active
 ReferenceChecker
 ----------------
 Given an directory with website, it searches for all references to every page within the website.
+
+6.py
+====
+Same as 5.py, but multithreaded.
