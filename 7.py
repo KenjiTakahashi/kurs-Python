@@ -91,22 +91,26 @@ def getdb(name):
 
 class Adder(QtGui.QWidget):
     add = pyqtSignal(str)
+    add = pyqtSignal(str, str, str)
     remove = pyqtSignal()
-    def __init__(self, parent = None):
+    def __init__(self, nofbtns = 1, parent = None):
         QtGui.QWidget.__init__(self, parent)
-        self.label = QtGui.QLineEdit()
         self.button = QtGui.QPushButton('Add')
         self.button.clicked.connect(self.clicked)
         self.sbutton = QtGui.QPushButton('Remove')
         self.sbutton.clicked.connect(self.remove)
         layout = QtGui.QHBoxLayout()
-        layout.addWidget(self.label)
+        self._buttons = list()
+        for i in range(nofbtns):
+            editbox = QtGui.QLineEdit()
+            self._buttons.append(editbox)
+            layout.addWidget(editbox)
         layout.addWidget(self.button)
         layout.addWidget(self.sbutton)
         layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(layout)
     def clicked(self):
-        self.add.emit(self.label.text())
+        self.add.emit(*[b.text() for b in self._buttons])
 
 class Menu(QtGui.QWidget):
     clear = pyqtSignal()
@@ -156,6 +160,7 @@ class Viewer(QtGui.QWidget):
         self.artists.setHeaderLabels(['Artist'])
         self.artists.setIndentation(0)
         self.artists.itemSelectionChanged.connect(self.fillAlbums)
+        self.artists.setSortingEnabled(True)
         artistsAdder = Adder()
         artistsAdder.add.connect(self.addArtist)
         artistsAdder.remove.connect(self.removeArtist)
@@ -166,7 +171,7 @@ class Viewer(QtGui.QWidget):
         self.albums.setHeaderLabels(['Year', 'Album', 'Borrowed'])
         self.albums.setIndentation(0)
         self.albums.itemChanged.connect(self.albumChanged)
-        albumsAdder = Adder()
+        albumsAdder = Adder(3)
         albumsAdder.add.connect(self.addAlbum)
         albumsAdder.remove.connect(self.removeAlbum)
         albumsL = QtGui.QVBoxLayout()
@@ -186,17 +191,20 @@ class Viewer(QtGui.QWidget):
         artist = self.artists.selectedItems()[0]
         self.artists.takeTopLevelItem(self.artists.indexOfTopLevelItem(artist))
         self.db.remove({'name': str(artist.text(0))})
-    def addAlbum(self, album):
-        data = album.split(';')
-        item = QtGui.QTreeWidgetItem(data[:-1])
-        item.setCheckState(2, data[-1] == 'yes' and 2)
+    def addAlbum(self, year, title, borrowed):
+        item = QtGui.QTreeWidgetItem([year, title])
+        item.setCheckState(2, borrowed == 'yes' and 2)
         self.albums.addTopLevelItem(item)
         self.db.update(
-            {'artist': str(self.artists.selectedItems()[0].text(0))},
+            {'name': str(self.artists.selectedItems()[0].text(0))},
             {
-                'album': str(data[0]),
-                'year': str(data[1]),
-                'borrowed': bool(data[-1] == 'yes')
+                '$push': {
+                    'albums': {
+                        'name': str(title),
+                        'year': str(year),
+                        'borrowed': bool(borrowed == 'yes')
+                    }
+                }
             }
         )
     def removeAlbum(self):
@@ -224,7 +232,6 @@ class Viewer(QtGui.QWidget):
                 pass
     def albumChanged(self, item, c):
         if c == 2:
-            data = bool(item.checkState(2))
             self.db.update(
                 {
                     'name': str(self.artists.selectedItems()[0].text(0)),
@@ -232,7 +239,7 @@ class Viewer(QtGui.QWidget):
                     'albums.name': str(item.text(1))
                 },
                 {
-                    '$set': {'albums.$.borrowed': data}
+                    '$set': {'albums.$.borrowed': bool(item.checkState(2))}
                 }
             )
 
