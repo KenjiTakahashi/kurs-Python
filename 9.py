@@ -6,7 +6,6 @@ import os
 import random
 from time import time
 from PyQt4 import QtGui
-from PyQt4.QtCore import pyqtSignal
 from PyQt4.uic import loadUi
 
 logger = logging.getLogger('z7')
@@ -216,22 +215,6 @@ class Logger(logging.Handler):
         self.parent.append(record.msg)
     def handle(self, record):
         logging.Handler.handle(self, record)
-
-class Editor(QtGui.QWidget):
-    dbChanged = pyqtSignal(str)
-    fill = pyqtSignal()
-    def __init__(self, parent = None):
-        QtGui.QWidget.__init__(self, parent)
-        menu = Menu()
-        menu.dbChanged.connect(self.dbChanged)
-        logs = Logger()
-        logger.setLevel(logging.DEBUG)
-        logger.addHandler(logs)
-        layout = QtGui.QHBoxLayout()
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.addWidget(logs)
-        layout.addWidget(menu)
-        self.setLayout(layout)
 
 def run():
     app = QtGui.QApplication(sys.argv)
