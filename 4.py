@@ -43,6 +43,7 @@ class Worder(object):
             if char == '':
                 if word == '':
                     raise StopIteration
+                self.firstchar = ''
                 break
             if char.isalnum():
                 if term:
